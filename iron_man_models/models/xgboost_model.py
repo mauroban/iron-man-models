@@ -1,10 +1,10 @@
 import pandas as pd
 from iron_man_models.config import FEATURE_IMPORTANCE_PATH
 from iron_man_models.models.base import BaseModel
-from lightgbm import LGBMClassifier
+from xgboost import XGBClassifier
 
 
-class LGBMModel(BaseModel):
+class XgboostModel(BaseModel):
     param_grid: dict = {
         "num_leaves": [4, 5, 6, 7, 8],
         "max_depth": [3, 4, 5, 6, 7],
@@ -23,15 +23,15 @@ class LGBMModel(BaseModel):
 
     def build_model(self):
         """
-        Build the LGBMClassifier model with the provided parameters.
+        Build the XGBClassifier model with the provided parameters.
         """
-        self.model = LGBMClassifier(**self.params)
+        self.model = XGBClassifier(**self.params)
 
     def save_feature_importance(self, feature_list):
         importances = self.model.feature_importances_
 
         pd.DataFrame(
-            {"feature": sorted(feature_list), "importance": importances}
+            {"feature": feature_list, "importance": importances}
         ).sort_values(
             'importance', ascending=False
         ).to_csv(FEATURE_IMPORTANCE_PATH, index=False)

@@ -53,18 +53,19 @@ class BaseModel(ABC):
                 "Model not built. Use build_model() method first."
             )
 
-        grid_search = RandomizedSearchCV(
-            self.model, self.param_grid, n_iter=n_iter, cv=cv, scoring=scoring
-        )
-        grid_search.fit(X_train, y_train)
+        if self.param_grid:
+            grid_search = RandomizedSearchCV(
+                self.model, self.param_grid, n_iter=n_iter, cv=cv, scoring=scoring
+            )
+            grid_search.fit(X_train, y_train)
 
-        self.model = grid_search.best_estimator_
-        self.params = grid_search.best_params_
+            self.model = grid_search.best_estimator_
+            self.params = grid_search.best_params_
 
-        mlflow.log_params(self.params)
-        mlflow.log_metric("best_cv_score", grid_search.best_score_)
+            mlflow.log_params(self.params)
+            mlflow.log_metric("best_cv_score", grid_search.best_score_)
 
-        return grid_search.best_estimator_, grid_search.best_params_
+            return grid_search.best_estimator_, grid_search.best_params_
 
     def predict_proba(self, X_test):
         """
