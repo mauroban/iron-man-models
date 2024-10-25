@@ -34,7 +34,7 @@ def apply_filters(df: pd.DataFrame) -> pd.DataFrame:
     filtered_df = df[filter_conditions]
 
     # Log the filter conditions to MLflow
-    mlflow.log_param("historical_sum_filter", "> 0")
+    mlflow.log_param("number of games played on map filter", "> 0")
 
     # Define columns for dropna
     dropna_columns = [

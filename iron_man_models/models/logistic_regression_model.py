@@ -1,10 +1,12 @@
 import logging
+
 import mlflow
 import numpy as np
+from sklearn.linear_model import LogisticRegression
+
 # import pandas as pd
 # from iron_man_models.config import FEATURE_IMPORTANCE_PATH
 from iron_man_models.models.base import BaseModel
-from sklearn.linear_model import LogisticRegression
 
 
 class LogisticRegressionModel(BaseModel):
@@ -14,15 +16,17 @@ class LogisticRegressionModel(BaseModel):
         """
         Build the LGBMClassifier model with the provided parameters.
         """
+        if not self.params:
+            self.params = {}
         self.model = LogisticRegression(**self.params)
 
-    def save_feature_importance(self, X):
+    def save_feature_importance(self, feature_list):
         # The estimated coefficients will all be around 1:
         logging.info(self.model.coef_)
 
         # Those values, however, will show that the second parameter
         # is more influential
-        logging.info(np.std(X, 0) * self.model.coef_)
+        # logging.info(np.std(feature_list, 0) * self.model.coef_)
 
     def fit(self, X_train, y_train):
         """

@@ -1,7 +1,9 @@
+import mlflow
 import pandas as pd
+from lightgbm import LGBMClassifier
+
 from iron_man_models.config import FEATURE_IMPORTANCE_PATH
 from iron_man_models.models.base import BaseModel
-from lightgbm import LGBMClassifier
 
 
 class LGBMModel(BaseModel):
@@ -25,6 +27,8 @@ class LGBMModel(BaseModel):
         """
         Build the LGBMClassifier model with the provided parameters.
         """
+        if not self.params:
+            self.params = {"device": "gpu"}
         self.model = LGBMClassifier(**self.params)
 
     def save_feature_importance(self, feature_list):
@@ -32,6 +36,7 @@ class LGBMModel(BaseModel):
 
         pd.DataFrame(
             {"feature": sorted(feature_list), "importance": importances}
-        ).sort_values(
-            'importance', ascending=False
-        ).to_csv(FEATURE_IMPORTANCE_PATH, index=False)
+        ).sort_values("importance", ascending=False).to_csv(
+            FEATURE_IMPORTANCE_PATH, index=False
+        )
+        mlflow.log_artifact(FEATURE_IMPORTANCE_PATH)

@@ -14,10 +14,8 @@ UNPROCESSED_FOLDER = os.getenv("UNPROCESSED_FOLDER", "data/unprocessed")
 ERROR_FOLDER = os.getenv("ERROR_FOLDER", "data/errors")
 FEATURES_PATH = os.getenv("FEATURES_PATH", "../iron-man-features/data")
 FEATURE_IMPORTANCE_PATH = os.getenv(
-    "FEATURE_IMPORTANCE_PATH",
-    "results/feature_importance.csv"
+    "FEATURE_IMPORTANCE_PATH", "results/feature_importance.csv"
 )
 MATCHES_TO_PREDICT_PATH = os.getenv(
-    "MATCHES_TO_PREDICT_PATH",
-    "../iron-man-features/data/matches_to_predict.csv"
+    "MATCHES_TO_PREDICT_PATH", "../iron-man-features/data/matches_to_predict.csv"
 )

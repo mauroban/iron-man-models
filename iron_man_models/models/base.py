@@ -1,8 +1,8 @@
 import logging
-import joblib
-import mlflow
 from abc import ABC, abstractmethod
 
+import joblib
+import mlflow
 from sklearn.base import BaseEstimator
 from sklearn.metrics import log_loss
 from sklearn.model_selection import RandomizedSearchCV
@@ -11,7 +11,7 @@ from sklearn.model_selection import RandomizedSearchCV
 class BaseModel(ABC):
     param_grid: dict = {}
 
-    def __init__(self, params=None, model: BaseEstimator = None):
+    def __init__(self, params={}, model: BaseEstimator = None):
         """
         Initialize the model with parameters.
         """
@@ -78,15 +78,33 @@ class BaseModel(ABC):
 
         return self.model.predict_proba(X_test)
 
-    def evaluate(self, X_test, y_test, scoring_func=log_loss):
+    def evaluate(
+        self,
+        X_train,
+        y_train,
+        X_random_test,
+        y_random_test,
+        X_oot_test,
+        y_oot_test,
+        scoring_func=log_loss,
+    ):
         """
         Evaluate the model using a custom scoring function.
         """
-        y_pred = self.predict_proba(X_test)
-        score = scoring_func(y_test, y_pred)
+        y_pred = self.predict_proba(X_train)
+        score = scoring_func(y_train, y_pred)
+        logging.info(f"biased_train log loss: {score}")
+        mlflow.log_metric("biased_train log loss", score)
 
-        mlflow.log_metric("evaluation_score", score)
-        return score
+        y_pred = self.predict_proba(X_random_test)
+        score = scoring_func(y_random_test, y_pred)
+        logging.info(f"random_test log loss: {score}")
+        mlflow.log_metric("random_test log loss", score)
+
+        y_pred = self.predict_proba(X_oot_test)
+        score = scoring_func(y_oot_test, y_pred)
+        logging.info(f"oot_test log loss: {score}")
+        mlflow.log_metric("oot_test log loss", score)
 
     def save_model(self, filepath: str):
         """
@@ -101,6 +119,11 @@ class BaseModel(ABC):
         joblib.dump(self.model, filepath)
         mlflow.log_artifact(filepath)
         logging.info(f"Model saved to {filepath}")
+
+    def save_feature_importance(self):
+        raise NotImplementedError(
+            "Function was not implemented on class"
+        )
 
     @staticmethod
     def load_model(filepath: str):
