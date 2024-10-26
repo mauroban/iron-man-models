@@ -9,11 +9,15 @@ from iron_man_models.data_manager.get_features import (
 )
 from iron_man_models.models.lgbm_model import LGBMModel
 from iron_man_models.models.logistic_regression_model import LogisticRegressionModel
+from iron_man_models.models.svc_model import SVCModel
+from iron_man_models.models.xgboost_model import XGBoostModel
 
 
 _ESTIMATORS = {
     "LGBM": LGBMModel,
     "LogisticRegression": LogisticRegressionModel,
+    "SVC": SVCModel,
+    "XGBoost": XGBoostModel,
 }
 
 
@@ -76,5 +80,6 @@ if __name__ == "__main__":
         encoding="utf-8",
     )
     train_flow(
-        algorithm="LogisticRegression",
+        algorithm="SVC",
+        run_name="svc_test_3",
     )

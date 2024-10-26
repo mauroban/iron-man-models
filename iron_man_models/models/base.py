@@ -54,6 +54,8 @@ class BaseModel(ABC):
             )
 
         if self.param_grid:
+            mlflow.log_param("CV n_iter", n_iter)
+            mlflow.log_param("CV folds", cv)
             grid_search = RandomizedSearchCV(
                 self.model, self.param_grid, n_iter=n_iter, cv=cv, scoring=scoring
             )

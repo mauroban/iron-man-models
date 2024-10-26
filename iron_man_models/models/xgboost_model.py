@@ -1,3 +1,4 @@
+import mlflow
 import pandas as pd
 from xgboost import XGBClassifier
 
@@ -5,21 +6,17 @@ from iron_man_models.config import FEATURE_IMPORTANCE_PATH
 from iron_man_models.models.base import BaseModel
 
 
-class XgboostModel(BaseModel):
-    param_grid: dict = {
-        "num_leaves": [4, 5, 6, 7, 8],
-        "max_depth": [3, 4, 5, 6, 7],
-        "learning_rate": [0.007, 0.01, 0.012, 0.015],
-        "n_estimators": [1200, 2000, 3000, 5000],
-        "min_split_gain": [0.0],
-        "min_child_weight": [0.001],
-        "min_child_samples": [20],
-        "subsample": [1.0],
-        "colsample_bytree": [1.0],
-        "reg_alpha": [0.0],
-        "reg_lambda": [0.0],
-        # 'scale_pos_weight': np.arange(1, 7),
-        "boosting_type": ["dart"],
+class XGBoostModel(BaseModel):
+    param_grid = {
+        'n_estimators': [80, 100, 200, 300, 500],
+        'learning_rate': [0.005, 0.01, 0.05, 0.1, 0.2],
+        'max_depth': [3, 5, 7, 10],
+        'min_child_weight': [1, 3, 5, 7, 10, 15],
+        'gamma': [0, 0.1, 0.3, 0.5],
+        'subsample': [0.6, 0.8, 1.0],
+        'colsample_bytree': [0.6, 0.8, 1.0],
+        'reg_alpha': [0, 0.01, 0.1, 1],
+        'reg_lambda': [0, 0.01, 0.1, 1]
     }
 
     def build_model(self):
@@ -34,3 +31,4 @@ class XgboostModel(BaseModel):
         pd.DataFrame({"feature": feature_list, "importance": importances}).sort_values(
             "importance", ascending=False
         ).to_csv(FEATURE_IMPORTANCE_PATH, index=False)
+        mlflow.log_artifact(FEATURE_IMPORTANCE_PATH)
