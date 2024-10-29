@@ -80,6 +80,6 @@ if __name__ == "__main__":
         encoding="utf-8",
     )
     train_flow(
-        algorithm="SVC",
-        run_name="svc_test_3",
+        algorithm="XGBoost",
+        run_name="xgb_december",
     )

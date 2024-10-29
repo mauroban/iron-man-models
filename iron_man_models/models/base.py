@@ -96,17 +96,17 @@ class BaseModel(ABC):
         y_pred = self.predict_proba(X_train)
         score = scoring_func(y_train, y_pred)
         logging.info(f"biased_train log loss: {score}")
-        mlflow.log_metric("biased_train log loss", score)
+        mlflow.log_metric("biased_train log loss", round(score, 4))
 
         y_pred = self.predict_proba(X_random_test)
         score = scoring_func(y_random_test, y_pred)
         logging.info(f"random_test log loss: {score}")
-        mlflow.log_metric("random_test log loss", score)
+        mlflow.log_metric("random_test log loss", round(score, 4))
 
         y_pred = self.predict_proba(X_oot_test)
         score = scoring_func(y_oot_test, y_pred)
         logging.info(f"oot_test log loss: {score}")
-        mlflow.log_metric("oot_test log loss", score)
+        mlflow.log_metric("oot_test log loss", round(score, 4))
 
     def save_model(self, filepath: str):
         """
