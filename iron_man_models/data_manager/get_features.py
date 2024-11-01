@@ -66,6 +66,10 @@ def custom_train_test_split(
 
     feature_list = sorted(feature_list)
 
+    mlflow.log_param("oot_date_threshold", oot_date_threshold)
+    mlflow.log_param("random_test_size", random_test_size)
+    mlflow.log_param("num_features", len(feature_list))
+
     train_df, random_test_df = train_test_split(
         remaining_df,
         test_size=random_test_size,

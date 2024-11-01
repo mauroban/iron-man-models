@@ -1,21 +1,26 @@
 WITH match_pred as (
 select
 	fm.id,
+	e.name event_name,
     fm.hltv_id,
     fm.max_maps,
+    fm.start_date,
 	t.name as team_name,
 	LOWER(m.name) as map_name,
 	p.win_chance
 from predictions p 
 left join teams t on t.id = p.team_id
 left join maps m on m.id = p.map_id
-left join future_matches fm on fm.id = p.future_match_id 
+left join future_matches fm on fm.id = p.future_match_id
+left join events e on e.id = fm.event_id 
 ),
 resumo as (
 SELECT 
 	mp.id,
     mp.hltv_id,
     mp.max_maps,
+    mp.start_date,
+    mp.event_name,
 	mp.map_name,
 	mp.team_name,
 	(mp.win_chance/(mp.win_chance + mp2.win_chance)) AS win_chance,

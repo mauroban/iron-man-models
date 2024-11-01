@@ -38,8 +38,8 @@ def train_flow(algorithm: str, experiment_name: str = "iron-man", run_name: str 
             y_oot_test,
         ) = custom_train_test_split(
             df=data,
-            oot_date_threshold=datetime(2024, 10, 8),
-            random_test_size=0.1,
+            oot_date_threshold=datetime(2024, 10, 15),
+            random_test_size=0.06,
             feature_list=features,
         )
 
@@ -81,5 +81,5 @@ if __name__ == "__main__":
     )
     train_flow(
         algorithm="XGBoost",
-        run_name="xgb_december",
+        run_name="remove_slow_elo",
     )
